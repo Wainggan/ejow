@@ -1,0 +1,1 @@
+lastSound = 0;

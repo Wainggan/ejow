@@ -1,0 +1,1 @@
+draw_sprite(sprite_index,image_index,x,y+wave(-3,3,4,0))

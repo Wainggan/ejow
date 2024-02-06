@@ -1,0 +1,1 @@
+part_system_automatic_update(pSystem, !game_pause)

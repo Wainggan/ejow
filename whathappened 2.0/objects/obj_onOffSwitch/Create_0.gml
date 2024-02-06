@@ -1,0 +1,1 @@
+lastCollide = 0;

@@ -1,0 +1,4509 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Beta Testing - builds</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        /* General */
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+    font-weight: 700;
+}
+
+body {
+    font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    object-fit: contain;
+}
+
+.markdown {
+    max-width: 100%;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.preserve-whitespace {
+    white-space: pre-wrap;
+}
+
+.spoiler {
+    /* width: fit-content; */
+    display: inline-block;
+    /* This is more consistent across browsers, the old attribute worked well under Chrome but not FireFox. */
+}
+
+.spoiler--hidden {
+    cursor: pointer;
+}
+
+.spoiler-text {
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-text {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler--hidden .spoiler-text::selection {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-image {
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.spoiler--hidden .spoiler-image * {
+    filter: blur(44px);
+}
+
+.spoiler--hidden .spoiler-image:after {
+    content: "SPOILER";
+    color: #dcddde;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    padding: 100%;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
+}
+
+.spoiler--hidden:hover .spoiler-image:after {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.quote {
+    margin: 0.1em 0;
+    padding-left: 0.6em;
+    border-left: 4px solid;
+    border-radius: 3px;
+}
+
+.pre {
+    font-family: "Consolas", "Courier New", Courier, monospace;
+}
+
+.pre--multiline {
+    margin-top: 0.25em;
+    padding: 0.5em;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.pre--inline {
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.mention {
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #7289da;
+    background: rgba(114, 137, 218, .1);
+    font-weight: 500;
+}
+
+.emoji {
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 0.06em;
+    vertical-align: -0.4em;
+}
+
+.emoji--small {
+    width: 1em;
+    height: 1em;
+}
+
+.emoji--large {
+    width: 2.8em;
+    height: 2.8em;
+}
+
+/* Preamble */
+
+.preamble {
+    display: grid;
+    margin: 0 0.3em 0.6em 0.3em;
+    max-width: 100%;
+    grid-template-columns: auto 1fr;
+}
+
+.preamble__guild-icon-container {
+    grid-column: 1;
+}
+
+.preamble__guild-icon {
+    max-width: 88px;
+    max-height: 88px;
+}
+
+.preamble__entries-container {
+    grid-column: 2;
+    margin-left: 0.6em;
+}
+
+.preamble__entry {
+    font-size: 1.4em;
+}
+
+.preamble__entry--small {
+    font-size: 1em;
+}
+
+/* Chatlog */
+
+.chatlog {
+    max-width: 100%;
+}
+
+.chatlog__message-group {
+    display: grid;
+    margin: 0 0.6em;
+    padding: 0.9em 0;
+    border-top: 1px solid;
+    grid-template-columns: auto 1fr;
+}
+
+.chatlog__reference-symbol {
+    grid-column: 1;
+    border-style: solid;
+    border-width: 2px 0 0 2px;
+    border-radius: 8px 0 0 0;
+    margin-left: 16px;
+    margin-top: 8px;
+}
+
+.chatlog__reference {
+    display: flex;
+    grid-column: 2;
+    margin-left: 1.2em;
+    margin-bottom: 0.25em;
+    font-size: 0.875em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-items: center;
+}
+
+.chatlog__reference-avatar {
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    margin-right: 0.25em;
+}
+
+.chatlog__reference-name {
+    margin-right: 0.25em;
+    font-weight: 600;
+}
+
+.chatlog__reference-link {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chatlog__reference-link:hover {
+    text-decoration: none;
+}
+
+.chatlog__reference-content > * {
+    display: inline;
+}
+
+.chatlog__reference-edited-timestamp {
+    margin-left: 0.25em;
+    font-size: 0.8em;
+}
+
+.chatlog__author-avatar-container {
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.chatlog__author-avatar {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.chatlog__messages {
+    grid-column: 2;
+    margin-left: 1.2em;
+    min-width: 50%;
+}
+
+.chatlog__author-name {
+    font-weight: 500;
+}
+
+.chatlog__timestamp {
+    margin-left: 0.3em;
+    font-size: 0.75em;
+}
+
+.chatlog__message {
+    padding: 0.1em 0.3em;
+    margin: 0 -0.3em;
+    background-color: transparent;
+    transition: background-color 1s ease;
+}
+
+.chatlog__content {
+    font-size: 0.95em;
+    word-wrap: break-word;
+}
+
+.chatlog__edited-timestamp {
+    margin-left: 0.15em;
+    font-size: 0.8em;
+}
+
+.chatlog__attachment {
+    margin-top: 0.3em;
+}
+
+.chatlog__attachment-thumbnail {
+    vertical-align: top;
+    max-width: 45vw;
+    max-height: 500px;
+    border-radius: 3px;
+}
+
+.chatlog__attachment-container {
+    height: 40px;
+    width: 100%;
+    max-width: 520px;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.chatlog__attachment-icon {
+    float: left;
+    height: 100%;
+    margin-right: 10px;
+}
+
+.chatlog__attachment-icon > .a {
+    fill: #f4f5fb;
+    d: path("M50,935a25,25,0,0,1-25-25V50A25,25,0,0,1,50,25H519.6L695,201.32V910a25,25,0,0,1-25,25Z");
+}
+
+.chatlog__attachment-icon > .b {
+    fill: #7789c4;
+    d: path("M509.21,50,670,211.63V910H50V50H509.21M530,0H50A50,50,0,0,0,0,50V910a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50h0V191Z");
+}
+
+.chatlog__attachment-icon > .c {
+    fill: #f4f5fb;
+    d: path("M530,215a25,25,0,0,1-25-25V50a25,25,0,0,1,16.23-23.41L693.41,198.77A25,25,0,0,1,670,215Z");
+}
+
+.chatlog__attachment-icon > .d {
+    fill: #7789c4;
+    d: path("M530,70.71,649.29,190H530V70.71M530,0a50,50,0,0,0-50,50V190a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50Z");
+}
+
+.chatlog__attachment-filesize {
+    color: #72767d;
+    font-size: 12px;
+}
+
+.chatlog__attachment-filename {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.chatlog__embed {
+    display: flex;
+    margin-top: 0.3em;
+    max-width: 520px;
+}
+
+.chatlog__embed-color-pill {
+    flex-shrink: 0;
+    width: 0.25em;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.chatlog__embed-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em 0.6em;
+    border: 1px solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.chatlog__embed-content {
+    display: flex;
+    width: 100%;
+}
+
+.chatlog__embed-text {
+    flex: 1;
+}
+
+.chatlog__embed-author {
+    display: flex;
+    margin-bottom: 0.3em;
+    align-items: center;
+}
+
+.chatlog__embed-author-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.chatlog__embed-author-name {
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-title {
+    margin-bottom: 0.2em;
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-description {
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.chatlog__embed-fields {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chatlog__embed-field {
+    flex: 0;
+    min-width: 100%;
+    max-width: 506px;
+    padding-top: 0.6em;
+    font-size: 0.875em;
+}
+
+.chatlog__embed-field--inline {
+    flex: 1;
+    flex-basis: auto;
+    min-width: 150px;
+}
+
+.chatlog__embed-field-name {
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.chatlog__embed-field-value {
+    font-weight: 500;
+}
+
+.chatlog__embed-thumbnail {
+    flex: 0;
+    margin-left: 1.2em;
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-image-container {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-image {
+    max-width: 500px;
+    max-height: 400px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-footer {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-footer-icon {
+    margin-right: 0.2em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.chatlog__embed-footer-text {
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.chatlog__reactions {
+    display: flex;
+}
+
+.chatlog__reaction {
+    display: flex;
+    align-items: center;
+    margin: 0.35em 0.1em 0.1em 0.1em;
+    padding: 0.2em 0.35em;
+    border-radius: 3px;
+}
+
+.chatlog__reaction-count {
+    min-width: 9px;
+    margin-left: 0.35em;
+    font-size: 0.875em;
+}
+
+.chatlog__bot-tag {
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    vertical-align: middle;
+    line-height: 1.3;
+    background: #7289da;
+    color: #ffffff;
+    font-size: 0.625em;
+    font-weight: 500;
+}
+
+/* Postamble */
+
+.postamble {
+    margin: 1.4em 0.3em 0.6em 0.3em;
+    padding: 1em;
+    border-top: 1px solid;
+}
+    </style>
+    <style>
+        /* General */
+
+body {
+    background-color: #36393e;
+    color: #dcddde;
+}
+
+a {
+    color: #0096cf;
+}
+
+.spoiler-text {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.spoiler--hidden .spoiler-text {
+    background-color: #202225;
+}
+
+.spoiler--hidden:hover .spoiler-text {
+    background-color: rgba(32, 34, 37, 0.8);
+}
+
+.quote {
+    border-color: #4f545c;
+}
+
+.pre {
+    background-color: #2f3136 !important;
+}
+
+.pre--multiline {
+    border-color: #282b30 !important;
+    color: #b9bbbe !important;
+}
+
+/* === Preamble === */
+
+.preamble__entry {
+    color: #ffffff;
+}
+
+/* Chatlog */
+
+.chatlog__message-group {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chatlog__reference-symbol {
+    border-color: #4f545c;
+}
+
+.chatlog__reference {
+    color: #b5b6b8;
+}
+
+.chatlog__reference-link {
+    color: #b5b6b8;
+}
+
+.chatlog__reference-link:hover {
+    color: #ffffff;
+}
+
+.chatlog__reference-edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__author-name {
+    color: #ffffff;
+}
+
+.chatlog__timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__message--highlighted {
+    background-color: rgba(114, 137, 218, 0.2) !important;
+}
+
+.chatlog__message--pinned {
+    background-color: rgba(249, 168, 37, 0.05);
+}
+
+.chatlog__attachment-container {
+    background-color: #2f3136;
+    border-color: #292b2f;
+}
+
+.chatlog__edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__embed-color-pill--default {
+    background-color: rgba(79, 84, 92, 1);
+}
+
+.chatlog__embed-content-container {
+    background-color: rgba(46, 48, 54, 0.3);
+    border-color: rgba(46, 48, 54, 0.6);
+}
+
+.chatlog__embed-author-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-author-name-link {
+    color: #ffffff;
+}
+
+.chatlog__embed-title {
+    color: #ffffff;
+}
+
+.chatlog__embed-description {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-field-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-field-value {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-footer {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__reaction {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chatlog__reaction-count {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Postamble */
+
+.postamble {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.postamble__entry {
+    color: #ffffff;
+}
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('message-' + id);
+
+            if (element) {
+                event.preventDefault();
+
+                element.classList.add('chatlog__message--highlighted');
+
+                window.scrollTo({
+                    top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                    behavior: 'smooth'
+                });
+
+                window.setTimeout(function() {
+                    element.classList.remove('chatlog__message--highlighted');
+                }, 2000);
+            }
+        }
+
+        function showSpoiler(event, element) {
+            if (element && element.classList.contains('spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('spoiler--hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Guild icon">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">Beta Testing</div>
+        <div class="preamble__entry">Game / builds</div>
+
+
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">16-Sep-20 04:08 PM</span>
+
+            <div class="chatlog__message chatlog__message--pinned" data-message-id="755928171412455506" id="message-755928171412455506">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">All the builds will live here.
+As a side note, I did not keep track of the update logs for every build under 6, so ye</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755928539429077075" id="message-755928539429077075">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 1</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755928539156709466/test.zip">
+                                                test.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.98 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755928670262132867" id="message-755928670262132867">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 1.1</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755928669829988462/test1.zip">
+                                                test1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.98 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755928752202186853" id="message-755928752202186853">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 2</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755928751770042368/test2.zip">
+                                                test2.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.98 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755928826193903797" id="message-755928826193903797">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 2.1</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755928825828999168/test2.1.zip">
+                                                test2.1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.98 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755928922457374781" id="message-755928922457374781">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 3</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755928922121568316/test3.zip">
+                                                test3.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.99 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755928981055733902" id="message-755928981055733902">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 4</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755928980741292032/test4.zip">
+                                                test4.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755929036017893386" id="message-755929036017893386">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 5</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755929035535679508/test5.zip">
+                                                test5.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755929079886118969" id="message-755929079886118969">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Build 6</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/755929079395385404/test6.zip">
+                                                test6.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="755929423752200262" id="message-755929423752200262">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Update Log: 
+I started work on level 2(?)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">14-Nov-20 04:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="777313329278484530" id="message-777313329278484530">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+New build!</span>
+
+                                <span class="chatlog__edited-timestamp" title="14-Nov-20 04:25 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="777313722271793213" id="message-777313722271793213">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">I completely redid everything!
+
+I got the very basics down:
+Tile collisions
+Platformer stuffs
+Coyote jumping(+ re-placement)
+Controlled jumps(+ extra air time)
+Some squish animations
+Controller support</span>
+
+                                <span class="chatlog__edited-timestamp" title="14-Nov-20 04:30 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/777313721819070475/whathappened_2.0.zip">
+                                                whathappened_2.0.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.97 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="777314266273415200" id="message-777314266273415200">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Also, I changed the screen size to 364x256, and tiles are now 8x8.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="777314511094939698" id="message-777314511094939698">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Hurry up and try it, and report bugs pls</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="777314542970994699" id="message-777314542970994699">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> once more</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">15-Nov-20 04:57 PM</span>
+
+            <div class="chatlog__message " data-message-id="777683628171329557" id="message-777683628171329557">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+New build!
+
+I got a few more things up and running, such as:
+Jump buffering
+Wall-jumping
+Wall-bouncing
+Climbing
+
+Try it!</span>
+
+                                <span class="chatlog__edited-timestamp" title="15-Nov-20 04:57 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="777683759699984425" id="message-777683759699984425">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/777683759314632711/whathappened_2.0_1.zip">
+                                                whathappened_2.0_1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.97 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">15-Nov-20 06:27 PM</span>
+
+            <div class="chatlog__message " data-message-id="777706274808791040" id="message-777706274808791040">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+New build!
+
+Now with:
+Camera
+Extra things that make the player feel nicer to control
+Bug fixes
+One way death tiles(Which I am very proud of)
+More bug fixes
+
+Try it now pls, there are probably many bugs...</span>
+
+                                <span class="chatlog__edited-timestamp" title="15-Nov-20 06:29 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="777706733426573362" id="message-777706733426573362">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/777706733110820902/whathappened_2.0_2.zip">
+                                                whathappened_2.0_2.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.97 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">24-Nov-20 07:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="780976746916216852" id="message-780976746916216852">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+New build!
+
+I&#39;m pretty excited about this one, it looks great!
+We now have a player sprite, with animations! 
+I also tweaked the physics a little bit to make it easier to play.
+
+Edit: I also made the screen size 768x512, double the size</span>
+
+                                <span class="chatlog__edited-timestamp" title="14-Jan-21 06:52 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="780977047404281877" id="message-780977047404281877">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/780977047270588427/whathappened_2.0_3.zip">
+                                                whathappened_2.0_3.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.98 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">27-Nov-20 05:48 PM</span>
+
+            <div class="chatlog__message " data-message-id="782045254395494420" id="message-782045254395494420">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Eeeey new build
+
+Nothing really new, except for some nicer looking animations and tilesets</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="782045366773481482" id="message-782045366773481482">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/782045366278946826/whathappened_2.0_4.zip">
+                                                whathappened_2.0_4.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.97 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">28-Nov-20 01:31 PM</span>
+
+            <div class="chatlog__message " data-message-id="782342865665392651" id="message-782342865665392651">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+New build!
+Our nice level has been replaced by a bad looking test room, which is sad.
+However, we also have a bunch of new things!
+
+Dashing has been implemented! Press I on keyboard or X on gamepad to dash. When dashing, hold a direction, and you will move in that direction. I have not put in a cap to how much you can use it though, so you can keep pressing dash for eternity :D
+There is now a save-game! With save-games, there are checkpoints. When you touch a checkpoint, the game will automatically save. You can then close the game and restart it to go back to where you where. 
+Lastly, I tweaked animations a little bit to make them look a bit better.
+
+Here are a few function keys for testing:
+Press Delete to delete the save file.
+Press F1 to toggle the collision layer.
+Press Home to restart the game.</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/782342864734519306/whathappened_2.0_5.zip">
+                                                whathappened_2.0_5.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.98 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">02-Dec-20 05:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="783858739241156649" id="message-783858739241156649">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+This took me quite a bit of time, but after like 3 hours of debugging, we have a new build!
+
+First, I made tweaked dashing a little bit. You character now leaves a blur behind them. There is also now a cap to how many dashes you can do.
+You can recover your dash by touching the ground, or grabbing a wall. After recovering it, you can dash again.
+There are other things you can do with the dash now, like long-jumping! You can long-jump by dashing to the ground, then jumping quickly. Try this on walls as well.
+
+Second, I made some animations for death. When you die, the screen will do a cool fade thing before putting you back to your spawn. 
+
+Third, the system is now capable of having multiple levels! When you touch an transition object(right now it is orange), the game will change the room to a new one, with another cool transition. It will also automatically save when you touch a flag or enter a new room.
+
+
+Also bugfixes!
+I think the most obvious one was where if you dashed, the camera had a panic attack.
+However, you wouldn&#39;t have seen it because it only happened in the big room...</span>
+
+                                <span class="chatlog__edited-timestamp" title="02-Dec-20 06:02 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/783858738804686889/whathappened_2.0_6.zip">
+                                                whathappened_2.0_6.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.98 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">05-Dec-20 06:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="784951622735495208" id="message-784951622735495208">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+This is the BIGGEST update yet!
+
+I completely reworked the camera system, so that it no longer uses the built-in camera. We now have screen-shaking!
+I am now using particles to spice up certain actions.
+When you dash, a pop of particles appear, and a white line points in the direction of your dash. The screen will also shake.
+When you die, the death animation has been reworked. The screen will shake, and the screen cover has been reworked to be a little slower, so it isn&#39;t as headache inducing.
+
+But that is just simple graphics, what about actual game stuff?
+
+There is now an object that recovers your dash in mid-air. I will call it the square-wheel for now.
+Is that it? Of course not!
+
+There are now 2 COMPLETE levels, complete with checkpoints, graphics, and secrets.
+
+
+I really hope you all test this out, it is probably extremely buggy lol.
+Have fun!</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/784951621980651550/whathappened_2.0_8.zip">
+                                                whathappened_2.0_8.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.03 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">06-Dec-20 12:55 PM</span>
+
+            <div class="chatlog__message " data-message-id="785232957538435113" id="message-785232957538435113">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Just a small patch
+There were some invisible spikes, I removed them.
+The player had a bug involving walljumping, I fixed that.</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/785232957307879444/whathappened_2.0_8.1.zip">
+                                                whathappened_2.0_8.1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.03 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">08-Dec-20 09:49 PM</span>
+
+            <div class="chatlog__message " data-message-id="786092216485150741" id="message-786092216485150741">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+New build!
+
+First of all, I tweaked some physics and whatever, I won&#39;t get to the specifics.
+The particles that appear when you die have been changed to blue because of how much they looked like blood lol
+
+Now for some BIG stuff
+There are 2 new levels, with 2 new mechanics
+First are marshmellows, which bounce you into the air and recover your dash!
+The second is a bit of a surprise.
+There are new transition between levels, and new animations!
+When you press up when on the ground, you look up
+
+That doesn&#39;t sound like a lot, but come on, there are 2 brand new levels!
+
+Enjoy <img class="emoji " alt="😄" title="😄" src="https://twemoji.maxcdn.com/2/72x72/1f604.png"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/786092212639105044/whathappened_2.0_9.zip">
+                                                whathappened_2.0_9.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.07 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">10-Dec-20 10:01 PM</span>
+
+            <div class="chatlog__message " data-message-id="786819901704110100" id="message-786819901704110100">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Sorry for the late ping, but we got a new build!
+
+There really isn&#39;t anything new, but you might notice that the physics feel <em>slightly</em> different.
+I rewrote a lot of code, and the way collisions and other things worked have been completely redone.
+There are probably MANY bugs, so please test this build and find some.</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/786819901276553217/whathappened_2.0_10.zip">
+                                                whathappened_2.0_10.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.08 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">25-Dec-20 11:52 AM</span>
+
+            <div class="chatlog__message " data-message-id="792102563209543700" id="message-792102563209543700">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">These are the project files so far</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/792102562928394240/project_files.zip">
+                                                project_files.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            641.96 KB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">27-Dec-20 12:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="792843438252359737" id="message-792843438252359737">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+Yay, new build!
+It has been a while since the last one, but I&#39;m back!
+
+I added a few new control schemes:
+Keyboard - 
+You can now use the Arrow Keys to move, and X &amp; C to dash and jump
+If you use WASD, you can press O to jump instead of U.
+
+Controller - 
+B and Y are now dash and jump. 
+Thanks to this, this game is technically possible to play on the new Quest 2 via Virtual Desktop.
+On that note, no, this game won&#39;t be possible to play natively(?) on the Quest, at least I think. I will have to look into it.
+
+2-1 is now complete!</span>
+
+                                <span class="chatlog__edited-timestamp" title="27-Dec-20 01:01 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/792843437707493446/build_11.zip">
+                                                build_11.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.09 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">04-Jan-21 07:04 PM</span>
+
+            <div class="chatlog__message " data-message-id="795835028642857071" id="message-795835028642857071">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+New build! 
+
+I found an interesting bug where if you long the the frame your dash ends, you gain way more speed than otherwise.
+I liked this, so I made it no longer frame-perfect.
+
+This means there is new tech, which I will call the Super longjump.
+First, you dash, then you wait until the very end of your dash.
+As soon as that happens, jump!
+
+Alternativly, you can jump in the air, and dash into the ground. As soon as you hit the ground, jump again to Super longjump.
+
+You can also do this on walls!
+
+So yea, just play around with it, report any bugs
+
+
+Edit: this is build 12</span>
+
+                                <span class="chatlog__edited-timestamp" title="24-Mar-21 11:16 AM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/795835024804806666/whathappened_2.0.zip">
+                                                whathappened_2.0.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.11 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">06-Jan-21 05:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="796532233778233384" id="message-796532233778233384">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Small update:
+
+By pressing down, you can fall faster than normal
+By dashing down, you keep all of your momentum
+Checkpoints now require to you be on the ground to collect them.
+
+And lastly, I put in Golden Checkpoints. If you make it to the end of a level without collecting any checkpoints, you can collect a golden checkpoint, which will teleport you to a harder version of the level. Right now, it just restarts the level :/
+I&#39;m not sure how much work I want to put into them.
+I think I will do it for every other level.</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/796532232575516703/whathappened_2.0_13.zip">
+                                                whathappened_2.0_13.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.11 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">08-Jan-21 02:51 PM</span>
+
+            <div class="chatlog__message " data-message-id="797221038580170807" id="message-797221038580170807">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Alright
+
+2-2 is complete, so have fun with it.
+1-1 has a golden level now,
+If you super long jump, you automatically duck to better show it.
+By pressing Up on a checkpoint, you can reset the level.
+
+That&#39;s about it!
+
+Remember to manually delete your save file if it crashes upon opening. Info on that in the <span class="mention">#notes</span> channel.</span>
+
+                                <span class="chatlog__edited-timestamp" title="08-Jan-21 02:53 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/797221038144225321/whathappened_2.0_14.zip">
+                                                whathappened_2.0_14.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.13 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">10-Jan-21 05:04 PM</span>
+
+            <div class="chatlog__message " data-message-id="797979125146976286" id="message-797979125146976286">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Very minor update:
+2-3 has been upgraded a bit, now with spinning saw-blades!
+Debug mode now shows every hitbox.
+If you head to the 1-1 secret(above the start), you can find a new golden flag. It just brings you to a test room where you can play with a teleport wheel, so have fun with that <img class="emoji " alt="😄" title="😄" src="https://twemoji.maxcdn.com/2/72x72/1f604.png"></span>
+
+                                <span class="chatlog__edited-timestamp" title="19-Feb-21 06:03 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/797979124017659934/whathappened_2.0_14.1.zip">
+                                                whathappened_2.0_14.1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.13 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">10-Jan-21 05:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="797988017813192704" id="message-797988017813192704">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Even smaller update lol
+I just finished 2-3, so I decided to just show it already.
+Also, sawblades are a different color now</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/797988017239097384/whathappened_2.0_14.2.zip">
+                                                whathappened_2.0_14.2.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.13 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">19-Feb-21 06:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="812489627197243402" id="message-812489627197243402">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Sorry for the wait, I ran into a dry-spell lol
+I just got out of it, so here is a new build
+
+I added 2-4. I think it might have a bit of a difficulty spike, so if it is too much, let me know
+I also changed the dash particle effect, subject to change lol</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/812489626178158602/whathappened_2.0_15.zip">
+                                                whathappened_2.0_15.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.14 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="812490085227823134" id="message-812490085227823134">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Also if you have any ideas for a little mechanic, let me know
+Example: the teleport wheel, moving platforms, spinning sawblades, etc.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">24-Feb-21 12:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="814220103410778132" id="message-814220103410778132">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+My wifi sucks lol
+
+This is a bit of a special build, because it doesn&#39;t add any new content, or change anything.
+I am trying out some kind of analytic api to track your progress, specifically when you die and when you finish a level.
+Basically, when you die, the game will tell me.
+
+Try it out(unless you don&#39;t want to be tracked), I want to see where y&#39;all die</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/814220102324715591/test_again_yay.zip">
+                                                test_again_yay.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            3.43 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction">
+                                <img class="emoji emoji--small" alt="&#128064;" title="&#128064;" src="https://twemoji.maxcdn.com/2/72x72/1f440.png">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                    </div>
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">26-Feb-21 05:43 PM</span>
+
+            <div class="chatlog__message " data-message-id="815021242163789855" id="message-815021242163789855">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Get ready for this change log
+
+4 new levels:
+3-1
+3-2
+3-3
+3-4
+
+3 new objects:
+Teleport Wheel(not really new, but first time being used in a level)
+Jump Wheel
+And a cloud(stolen directly from Celeste lol)
+
+In 2-4, there was a way to jump of the world into the void, now there is a wall to prevent that
+
+Pressing Tab now kills the player instead of rebooting the game, which no longer causes the game softlock when resetting during a transition
+
+There are now place-holder graphics on warpzones
+
+Minor levels changes in
+2-4, the shortcut was very difficult to perform
+2-3, the warpzone is easier to see and get to
+2-1, tiling error
+1-2, tiling error
+
+
+Oh, and the tracking was removed
+
+Enjoy!</span>
+
+                                <span class="chatlog__edited-timestamp" title="26-Feb-21 05:46 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/815021242146226216/whathappened_2.0_16.zip">
+                                                whathappened_2.0_16.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.18 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">26-Feb-21 06:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="815026745396559872" id="message-815026745396559872">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Whoopsy daisy i forgot I changed some values, and it made some of the new levels impossible, so here is a quick fix
+(and some spikes became invisible in 3-2, so it got fixed)</span>
+
+                                <span class="chatlog__edited-timestamp" title="26-Feb-21 06:06 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/815026745001377832/whathappened_2.0_16.1.zip">
+                                                whathappened_2.0_16.1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.18 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">26-Feb-21 06:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="815030437197119498" id="message-815030437197119498">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+I just removed the debug numbers on the side, which if you want to, you can see by going into debug mode(f1)</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/815030436786995250/whathappened_2.0_16.2.zip">
+                                                whathappened_2.0_16.2.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.18 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">16-Mar-21 08:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="821585048808849419" id="message-821585048808849419">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+Here is something I made today, a really simple bullet hell game thing.
+There isn&#39;t any goal, this is just something I made really quickly to try &#39;test&#39; my coding skills. 
+WASD to move, I(eye) to slow mo
+It runs pretty fine for me, but tell me if there are any very noticeable frame drops(top left corner, it is supposed to be 60 fps). 
+
+I&#39;m really proud with the way the bullets look!</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/821585048524030013/bullet.zip">
+                                                bullet.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.95 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="821585200256385045" id="message-821585200256385045">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/821585198625325066/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/821585198625325066/unknown.png" alt="Image attachment" title="Image: unknown.png (115.01 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="821585391156723723" id="message-821585391156723723">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">(blue bullets would indicate that they wont hurt)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">18-Mar-21 02:07 PM</span>
+
+            <div class="chatlog__message " data-message-id="822214603828232292" id="message-822214603828232292">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Last update to the bullet hell i swear
+I changed a some speeds, the player is smaller, bullets have particles when they hit each other, and when you get hit, the game will freeze, and you will have some i-frames
+
+Edit: also intense optimization, the game does not lag anymore(at least for me)! The last build had more than 1000 bullets loaded at once, previously the bullets had a life timer, and when the timer reaches 0, it deletes itself. Now the game checks to see if a bullet is far from the player, and if it is, it deletes the bullet. 
+The amount of bullets loaded have been halved because of this!
+
+Also from now on, I will upload screenshots of the builds because it makes the announcement look better</span>
+
+                                <span class="chatlog__edited-timestamp" title="18-Mar-21 02:16 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/822214603483512832/bullet2.zip">
+                                                bullet2.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            1.95 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="822214764104646706" id="message-822214764104646706">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/822214759881506856/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/822214759881506856/unknown.png" alt="Image attachment" title="Image: unknown.png (116.98 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">18-Mar-21 03:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="822239362305359903" id="message-822239362305359903">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Last ping for today (maybe)
+
+All I ask is that you check out 1-1</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/822239361877803088/whathappened_2.0_16.2.1.zip">
+                                                whathappened_2.0_16.2.1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.2 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="822239514104954892" id="message-822239514104954892">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/822239510540582933/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/822239510540582933/unknown.png" alt="Image attachment" title="Image: unknown.png (20.19 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">18-Mar-21 06:09 PM</span>
+
+            <div class="chatlog__message " data-message-id="822275678136565780" id="message-822275678136565780">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+I&#39;M SORRY I COULDN&#39;T HELP MYSELF I DID MORE CODING
+
+I added 3 new objects, to play with them, head to the 1-1 secret
+
+An on/off switch, they are fun
+A wall you can&#39;t grab on
+And S P E E D</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/822275677759471678/whathappened_2.0_16.2.2.zip">
+                                                whathappened_2.0_16.2.2.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.2 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="822275730469683271" id="message-822275730469683271">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">In case you don&#39;t know where the 1-1 secret is, here is a picture</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/822275727290138634/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/822275727290138634/unknown.png" alt="Image attachment" title="Image: unknown.png (28.97 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="822275907996614696" id="message-822275907996614696">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/822275904474054728/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/822275904474054728/unknown.png" alt="Image attachment" title="Image: unknown.png (18.15 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">19-Mar-21 01:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="822562967802609714" id="message-822562967802609714">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Another minor update, sorry
+
+
+I&#39;ll just give you the change log here:
+
+Slipwalls now don&#39;t recover your dash at all if you step on them
+
+Slipwall are also slippery now
+
+The slipwall&#39;s graphics have been adjusted a teeny bit
+
+When you wall jump onto a platform and try to super long jump, you can&#39;t control your jump height until you land, that has been fixed
+
+The players top dash-momentum has been increased a tiny bit
+
+You can no longer spam dash on the ground, because it used to be the fastest way to move and I wanted long jumping to be the fastest, because it is more fun than spamming dash
+
+There is special animation for when you land! (it was supposed to be there already, but I forgot to write the code that actually does the thing)
+
+When you jump, you get a little bit of momentum to help you jump farther</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/822562967311614022/whathappened_2.0_16.2.3.zip">
+                                                whathappened_2.0_16.2.3.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.2 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="822563184388472872" id="message-822563184388472872">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/822563182165098556/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/822563182165098556/unknown.png" alt="Image attachment" title="Image: unknown.png (16.76 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">22-Mar-21 05:36 PM</span>
+
+            <div class="chatlog__message " data-message-id="823716695516381184" id="message-823716695516381184">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Sound effects!
+
+We got sound effects for everything except for the 1-4 boss fight and climbing.
+Some sounds I might remove all-together, specifically the walking sounds.
+Saw sounds are incredibly buggy, but its a start(for some reason I am hearing saws in 3-1, even though I&#39;m really far from them? I have no idea how that happened they only exist at the beginning of that level)
+
+Lemme know which ones are bad and which ones are good</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/823716695003627520/whathappened_2.0_17.zip">
+                                                whathappened_2.0_17.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            2.38 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction">
+                                <img class="emoji emoji--small" alt="&#128266;" title="&#128266;" src="https://twemoji.maxcdn.com/2/72x72/1f50a.png">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">23-Mar-21 07:42 PM</span>
+
+            <div class="chatlog__message " data-message-id="824110930115690497" id="message-824110930115690497">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+First of all, I have some bad news
+The game is too large! I can&#39;t upload it to Discord anymore!
+So unfortunately I have to cancel the project
+Obviously I&#39;m joking, I&#39;m using Google Drive now
+
+Now for the update:
+
+1-2&#39;s second checkpoint was made a teeny-bit less tight
+
+Spikes are now a little bit more lenient, if you touch spike, now you will survive for up to 3 frames
+
+Saws are no longer omnipresent
+
+Something something, I forgooott
+Oh ya music
+Here is a music test, they are a bit bad(and maybe a bit buggy), so let me know what sucks and what doesn&#39;t
+
+
+<a href="https://drive.google.com/file/d/11_YOAvgLSikhvuJMfCpj9OrSlRCy8Te3/view?usp=sharing">https://drive.google.com/file/d/11_YOAvgLSikhvuJMfCpj9OrSlRCy8Te3/view?usp=sharing</a></span>
+
+                                <span class="chatlog__edited-timestamp" title="23-Mar-21 07:43 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/11_YOAvgLSikhvuJMfCpj9OrSlRCy8Te3/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 18.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="824111167190466591" id="message-824111167190466591">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/824111165297917992/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/824111165297917992/unknown.png" alt="Image attachment" title="Image: unknown.png (23.88 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">23-Mar-21 07:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="824113455668789315" id="message-824113455668789315">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Due to an issue, we have disabled Fortnite</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="824113572011049031" id="message-824113572011049031">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Yea you can&#39;t die to the bottom in world 3, so that should be fixed now
+<a href="https://drive.google.com/file/d/1w166bEJ9VtdZnbURQuGfnRbT4w0M1B1N/view?usp=sharing">https://drive.google.com/file/d/1w166bEJ9VtdZnbURQuGfnRbT4w0M1B1N/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1w166bEJ9VtdZnbURQuGfnRbT4w0M1B1N/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 18.1.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="824114185083813949" id="message-824114185083813949">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">world 3 in general is just broken now lol</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="824115771050950656" id="message-824115771050950656">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Ok world 3 is not as broken
+<a href="https://drive.google.com/file/d/1-iYt9CzcnjgHwOep3ow9V34V0PT6j67R/view?usp=sharing">https://drive.google.com/file/d/1-iYt9CzcnjgHwOep3ow9V34V0PT6j67R/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1-iYt9CzcnjgHwOep3ow9V34V0PT6j67R/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 18.2.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">23-Mar-21 08:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="824121417531916358" id="message-824121417531916358">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+hahahaha
+Remember when I made update 18 and accidentally deleted death
+I fixed it
+<a href="https://drive.google.com/file/d/1qhBQMZ1U_vPA-ULJOH7eMnOQIM8Z-mmo/view?usp=sharing">https://drive.google.com/file/d/1qhBQMZ1U_vPA-ULJOH7eMnOQIM8Z-mmo/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1qhBQMZ1U_vPA-ULJOH7eMnOQIM8Z-mmo/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 18.3.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">24-Mar-21 01:09 PM</span>
+
+            <div class="chatlog__message " data-message-id="824374507371888651" id="message-824374507371888651">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+Pause menu!!!!!!
+Press P or Shift to open the menu!
+It is very beta
+
+(Also i removed walking sounds, and the 1-4 boss has sounds now)
+
+<a href="https://drive.google.com/file/d/1MBsRXYa3WPRe6caLDBfhHcAVkTaebZNJ/view?usp=sharing">https://drive.google.com/file/d/1MBsRXYa3WPRe6caLDBfhHcAVkTaebZNJ/view?usp=sharing</a></span>
+
+                                <span class="chatlog__edited-timestamp" title="24-Mar-21 01:11 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1MBsRXYa3WPRe6caLDBfhHcAVkTaebZNJ/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 19.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction">
+                                <img class="emoji emoji--small" alt="⏸️" title="⏸️" src="https://twemoji.maxcdn.com/2/72x72/23f8.png">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                    </div>
+            </div>
+            <div class="chatlog__message " data-message-id="824374837673066556" id="message-824374837673066556">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/824374834930778112/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/824374834930778112/unknown.png" alt="Image attachment" title="Image: unknown.png (26.12 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">24-Mar-21 06:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="824452769104658442" id="message-824452769104658442">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Just some polish in general
+
+The dash particles now account for your momentum(but they appear behind you for some reason, not entirely sure why)
+Camera logic has been improved a bit(it accounts for your momentum a little bit, you might not notice it too much tho)
+The menu has a font now
+New Warp Zone at the end of 3-2
+Music has been improved
+The menu can teleport you to levels now! (warp zones were just not good)
+Lowered the 1-4&#39;s shoot sound&#39;s volume way the heck down
+Got some great progress on 4-1, make sure to use F1 to actually see the level
+
+Oh also the mouse disappears when you press something
+
+<a href="https://drive.google.com/file/d/1SdsUkJdqCKpARNCQWbKQexjaqKxC1G49/view?usp=sharing">https://drive.google.com/file/d/1SdsUkJdqCKpARNCQWbKQexjaqKxC1G49/view?usp=sharing</a></span>
+
+                                <span class="chatlog__edited-timestamp" title="24-Mar-21 06:25 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1SdsUkJdqCKpARNCQWbKQexjaqKxC1G49/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 19.1.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="824453662196891658" id="message-824453662196891658">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/824453659798405120/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/824453659798405120/unknown.png" alt="Image attachment" title="Image: unknown.png (20.49 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">25-Mar-21 08:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="824853321448947763" id="message-824853321448947763">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Sorry for the late ping, but I&#39;m to impatient to wait till tomorrow
+
+Change-log:
+You can now hold the down button in a menu
+There are now settings and debug options! Any ideas for some settings?
+The menu is smoother and darker
+particles appear in front of you now
+Z is now mapped to jump(not sure why it wasn&#39;t)
+V is now a pause button
+Theres a tutorial in 1-1 now! It&#39;s very basic, but I like it that way.
+I tweaked momentum physics a little bit, you now lose a bit less momentum in the air.
+
+<a href="https://drive.google.com/file/d/1awhIhtGoVN-Jhl_GSdJOU6v-0nWOxNlv/view?usp=sharing">https://drive.google.com/file/d/1awhIhtGoVN-Jhl_GSdJOU6v-0nWOxNlv/view?usp=sharing</a></span>
+
+                                <span class="chatlog__edited-timestamp" title="25-Mar-21 08:55 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1awhIhtGoVN-Jhl_GSdJOU6v-0nWOxNlv/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 19.2.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="824853732063707177" id="message-824853732063707177">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/824853729563901982/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/824853729563901982/unknown.png" alt="Image attachment" title="Image: unknown.png (30.9 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">26-Mar-21 05:35 PM</span>
+
+            <div class="chatlog__message " data-message-id="825166199926685798" id="message-825166199926685798">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+
+You now lose a bit more momentum in the air
+World 1 now shows you what level you are on!
+4-1 is finished!
+
+<a href="https://drive.google.com/file/d/1v5zsJkui0yxIOu8fZ4AqA3H8928Uaytq/view?usp=sharing">https://drive.google.com/file/d/1v5zsJkui0yxIOu8fZ4AqA3H8928Uaytq/view?usp=sharing</a></span>
+
+                                <span class="chatlog__edited-timestamp" title="26-Mar-21 05:36 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1v5zsJkui0yxIOu8fZ4AqA3H8928Uaytq/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 19.3.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="825166669436813313" id="message-825166669436813313">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/825166666505781252/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/825166666505781252/unknown.png" alt="Image attachment" title="Image: unknown.png (36.69 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="825166833388355604" id="message-825166833388355604">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">(ignore the reset button on the left, its a placeholder lol)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">28-Mar-21 02:38 PM</span>
+
+            <div class="chatlog__message " data-message-id="825846308862033920" id="message-825846308862033920">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Ugh I was going to make a new level right now, but I got tired really quickly, so here is a very tiny build
+
+Every level shows you what level you are on now
+Grass has been redrawn! It was so ugly, I hope it looks better now
+
+<a href="https://drive.google.com/file/d/1XnbU4qtcuT0UasLaIy4VWuzpT2hAH7ES/view?usp=sharing">https://drive.google.com/file/d/1XnbU4qtcuT0UasLaIy4VWuzpT2hAH7ES/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1XnbU4qtcuT0UasLaIy4VWuzpT2hAH7ES/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 19.3.1.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="825846357143191572" id="message-825846357143191572">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/825846352868802570/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/825846352868802570/unknown.png" alt="Image attachment" title="Image: unknown.png (27.42 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="825846710088499200" id="message-825846710088499200">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">For reference, it used to look like this!</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/825846704582164490/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/825846704582164490/unknown.png" alt="Image attachment" title="Image: unknown.png (31.9 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="825847319923523655" id="message-825847319923523655">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Nvmd I have some intense inspiration rn, I&#39;m making 4-2!!!</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">28-Mar-21 05:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="825886294710288445" id="message-825886294710288445">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+Alright, actual new stuff this time!
+
+I rerendered(not sure what the correct word for that is...) the music
+World 4&#39;s music is louder
+Moving platform tracks are brigther
+And most importantly:
+4-2 is done, and it looks great!! Go give it a try, it&#39;s really fun.
+
+I just realized that the file size for this game when extracted is more than 100 megabytes!
+Make sure to delete older builds of the game to save space.
+
+<a href="https://drive.google.com/file/d/1PvQg8KOoecDj8VeAZdIzTvNVf-flztI8/view?usp=sharing">https://drive.google.com/file/d/1PvQg8KOoecDj8VeAZdIzTvNVf-flztI8/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1PvQg8KOoecDj8VeAZdIzTvNVf-flztI8/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 20.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="825886305732919328" id="message-825886305732919328">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/825886301906534450/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/825886301906534450/unknown.png" alt="Image attachment" title="Image: unknown.png (24.29 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">29-Mar-21 05:10 PM</span>
+
+            <div class="chatlog__message " data-message-id="826247044867162144" id="message-826247044867162144">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+I reduced the size of the game to half it&#39;s original amount by removing a lot of unused level space! Because of this, the game might be easier for your computer to handle
+The music has also been compressed, but I didn&#39;t really notice a difference.
+
+I think I modified a few levels, but I forget which ones lol
+In 4-3, I put a few more spikes near the end, but I can&#39;t remember anything else :/
+
+Oh, also because of how much space was saved, I can upload the game to Discord again!!
+Project un-cancelled!!</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/826247044397006868/whathappened_2.0_20.1.zip">
+                                                whathappened_2.0_20.1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            5.58 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="826247438847311933" id="message-826247438847311933">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">I don&#39;t really have a good screen shot, so here&#39;s a before, after</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="826247504893968444" id="message-826247504893968444">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Before</span>
+
+                                <span class="chatlog__edited-timestamp" title="29-Mar-21 05:12 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/826247501669466142/this_is_a_bad_habit.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/826247501669466142/this_is_a_bad_habit.png" alt="Image attachment" title="Image: this_is_a_bad_habit.png (11.19 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="826247591359807488" id="message-826247591359807488">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">After</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/826247586763374612/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/826247586763374612/unknown.png" alt="Image attachment" title="Image: unknown.png (15.91 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="826247630363426867" id="message-826247630363426867">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">I won&#39;t hide my shame lol</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">30-Mar-21 05:42 PM</span>
+
+            <div class="chatlog__message " data-message-id="826617481611051088" id="message-826617481611051088">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+4-3 is finished!
+That leaves 4-4 left, and we are done with the levels!
+All that&#39;s left after that would be... graphics polish and level polish!
+
+Graphics as in, clean up a few sprites(like the update a few days ago where I made the grass look better), giving the levels backgrounds(admit it, 1-1 looks great with that parallax)</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/826617480818589767/whathappened_2.0_21.zip">
+                                                whathappened_2.0_21.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            5.59 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">31-Mar-21 12:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="826906747667087441" id="message-826906747667087441">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+I lied, I did graphics before 4-4 lol
+
+I did some background work on world 1, and I think it looks pretty good
+There are some issues, like how the clouds are the same color as spikes and how the background can make the player hard to see, but that can be fixed later
+
+Other than that, some objects look a little better, but not by much at all
+And I reworked jumping momentum, now when you jump, you get a speed boost for like 2-3 frames, unlike previously how it didn&#39;t work lol</span>
+
+                                <span class="chatlog__edited-timestamp" title="31-Mar-21 12:57 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/826906745514623036/whathappened_2.0_21.1.zip">
+                                                whathappened_2.0_21.1.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            5.6 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">31-Mar-21 07:50 PM</span>
+
+            <div class="chatlog__message " data-message-id="827011894850093076" id="message-827011894850093076">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Sorry im in a rush
+
+I decided to procrastinate on 4-4, and just clean up the graphics first
+the player is brighter, the flag is blue now, the teleport wheel has a new graphic, but the jump wheel is broken lol
+i just cleaned up a few things
+actaully this build is mostly to look at the teleport wheel and something else but i forgot what
+
+ok bye</span>
+
+                                <span class="chatlog__edited-timestamp" title="31-Mar-21 07:50 PM">(edited)</span>
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/827011893901262868/whathappened_2.0_21.2.zip">
+                                                whathappened_2.0_21.2.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            5.61 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">01-Apr-21 06:48 PM</span>
+
+            <div class="chatlog__message " data-message-id="827358740834943016" id="message-827358740834943016">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+We have finished 4-4, and thus, we are almost done with the game!
+Go check it out!!</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/827358740189282325/whathappened_2.0_22.zip">
+                                                whathappened_2.0_22.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            5.68 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">01-Apr-21 07:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="827371907556966450" id="message-827371907556966450">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+I was joking, here is an actual build
+
+Ok changelog
+I did a bit of 4-4
+Spikes account for total player speed instead of just the players speed(if that makes sense)
+Jump wheels have actual graphics
+And that&#39;s about it I think
+
+Actually go check out 4-4 please
+Ok thanks</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/827371907056795648/whathappened_2.0_actually_22.zip">
+                                                whathappened_2.0_actually_22.zip
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            5.68 MB
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">02-Apr-21 08:32 PM</span>
+
+            <div class="chatlog__message " data-message-id="827747455897436161" id="message-827747455897436161">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+We are so close to finishing this game!
+
+Ok, teleporting and debug options are disabled now, if you want to enable them, you can:
+A) beat the game, or
+B) go to the save files(check out <span class="mention">#notes</span> for more info), and put a file named &quot;debug&quot; in it.
+
+4-4 is finished, and we have an end room with credits in them, to be finished
+If you want a special name on it, tell me, otherwise I&#39;ll put your username
+
+All that&#39;s left is giving world 2, 3, and 4 some backgrounds and giving the 1-4 &amp; 4-4 boss some graphics(and probably give the title screen some personality), and I think that would be it for this game!
+
+Oh, about the golden levels
+I think I&#39;m going to leave them out and save them for a future update, after the game is finished. If you don&#39;t like that, tell me please
+
+
+Not entirely sure why, but the music wasn&#39;t as compressed as it used to, so the zip file breached the Discord upload limit.
+<a href="https://drive.google.com/file/d/1ysClvLg7aRadU7_mpF3hmhRomKQ_Wb3s/view?usp=sharing">https://drive.google.com/file/d/1ysClvLg7aRadU7_mpF3hmhRomKQ_Wb3s/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1ysClvLg7aRadU7_mpF3hmhRomKQ_Wb3s/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 22.1 again.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="827747465356115988" id="message-827747465356115988">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/827747462747783198/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/827747462747783198/unknown.png" alt="Image attachment" title="Image: unknown.png (21.29 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="827747587276669018" id="message-827747587276669018">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Here is the file you can use to unlock Debug Mode</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <div class="chatlog__attachment-container">
+                                        <svg class="chatlog__attachment-icon" viewBox="0 0 720 960">
+                                            <path class="a"/>
+                                            <path class="b"/>
+                                            <path class="c"/>
+                                            <path class="d"/>
+                                        </svg>
+                                        <div class="chatlog__attachment-filename">
+                                            <a href="https://cdn.discordapp.com/attachments/755927446825730079/827747587049390131/debug">
+                                                debug
+                                            </a>
+                                        </div>
+                                        <div class="chatlog__attachment-filesize">
+                                            0 bytes
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">03-Apr-21 05:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="828066260016300063" id="message-828066260016300063">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+We are so cloooose
+I tried to clean up as much things as possible, here is the changelog(i guess)
+
+All the objects now respect the laws of the universe, and pause when the game pauses
+The cloud has a better pop animation
+I did a level rundown:
+1-3 Had some design changes
+2-1a was flattened and shortened
+2-1b had a moving platform replaced with an actual challenge
+2-2 was cleaned up
+I removed a shortcut in 2-3, it was really awquard to use
+Anti-cheese in 2-4
+erm, I forgot everything in world 3
+4-1 is now actually possible
+Tile fix in 4-4
+End room has some links now, yay
+The tutorial is a bit brighter
+
+I got backgrounds on world 2 and 3, and a little bit of 4-1
+Ummmm I forget the rest
+
+Oh wait, I changed the graphics of some objects, like the moving platform
+
+<a href="https://drive.google.com/file/d/1JR_FSTJBQZ4Q3GZ_PLcwymUyhHNTwpwn/view?usp=sharing">https://drive.google.com/file/d/1JR_FSTJBQZ4Q3GZ_PLcwymUyhHNTwpwn/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1JR_FSTJBQZ4Q3GZ_PLcwymUyhHNTwpwn/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 23.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="828066454468558848" id="message-828066454468558848">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/828066448189423636/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/828066448189423636/unknown.png" alt="Image attachment" title="Image: unknown.png (20.1 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="828066580935868437" id="message-828066580935868437">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/828066577185767484/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/828066577185767484/unknown.png" alt="Image attachment" title="Image: unknown.png (20.92 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="828066721009106984" id="message-828066721009106984">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/828066717908336640/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/828066717908336640/unknown.png" alt="Image attachment" title="Image: unknown.png (22.56 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">08-Apr-21 07:08 PM</span>
+
+            <div class="chatlog__message " data-message-id="829900580587044864" id="message-829900580587044864">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+Ugh there are too many changes to talk about, and I forgot to write them down!!!
+
+Whatever, luckily I have the best memory out there
+I remember nothing lol
+
+Ok, here are some tiny thing of the top of my head
+The mouse functions better
+I think I did some level design tweaks
+Uumm
+Thats all I remember
+
+Ok bigger things
+The 1-4 boss has a graphic now, and it looks... fine i think, im not sure
+World 4 has all its background finished
+
+Wow, that sounds like basically nothing all together, but I did do a lot of tiny tweaks, I just forgot them all
+
+<a href="https://drive.google.com/file/d/1YJ7UM4LYBHUjcveKPPeNCm_KJaW0v0dR/view?usp=sharing">https://drive.google.com/file/d/1YJ7UM4LYBHUjcveKPPeNCm_KJaW0v0dR/view?usp=sharing</a>
+I&#39;m a bit surprised by how little the file size grew in this update, but whatever</span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1YJ7UM4LYBHUjcveKPPeNCm_KJaW0v0dR/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 24.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+            <div class="chatlog__message " data-message-id="829900736690651167" id="message-829900736690651167">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/829900734463082546/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/829900734463082546/unknown.png" alt="Image attachment" title="Image: unknown.png (24.52 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="829900976806559744" id="message-829900976806559744">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/829900974490648606/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/829900974490648606/unknown.png" alt="Image attachment" title="Image: unknown.png (38.48 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="829901056301203456" id="message-829901056301203456">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Yes I know there is a mistake in the background</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="829901101327319100" id="message-829901101327319100">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/829901099585503232/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/829901099585503232/unknown.png" alt="Image attachment" title="Image: unknown.png (3.63 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="829901157769412608" id="message-829901157769412608">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/829901154245935115/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/829901154245935115/unknown.png" alt="Image attachment" title="Image: unknown.png (439 bytes)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">09-Apr-21 02:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="830186014210523186" id="message-830186014210523186">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span>
+A few changes, mostly for graphics
+
+You can now... climb-spike-jump more easily!
+The menu now plays sound when you actually move
+When you press &quot;Settings&quot;, it moves your cursor to the first option
+
+And for graphics...
+There is a turning animation
+There are now some post-processing! If it lags your game, head to settings to turn it off. Also tell me!
+
+<a href="https://drive.google.com/file/d/1o2bKS2kgTNNuQ21sS9BMi5YRbc-xOKQP/view?usp=sharing">https://drive.google.com/file/d/1o2bKS2kgTNNuQ21sS9BMi5YRbc-xOKQP/view?usp=sharing</a></span>
+
+                                <span class="chatlog__edited-timestamp" title="09-Apr-21 02:07 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1o2bKS2kgTNNuQ21sS9BMi5YRbc-xOKQP/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">whathappened 2.0 24.1.zip</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">09-Apr-21 02:10 PM</span>
+
+            <div class="chatlog__message " data-message-id="830187937340981298" id="message-830187937340981298">
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="https://cdn.discordapp.com/attachments/755927446825730079/830187935273844827/unknown.png">
+                                        <img class="chatlog__attachment-thumbnail" src="https://cdn.discordapp.com/attachments/755927446825730079/830187935273844827/unknown.png" alt="Image attachment" title="Image: unknown.png (24.52 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">14-Apr-21 06:27 PM</span>
+
+            <div class="chatlog__message " data-message-id="832064554237296661" id="message-832064554237296661">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention">@everyone</span> 
+Might be the last build, but what&#39;s this???
+It&#39;s not a zip file!?
+That&#39;s right, it is an installer!!
+
+
+You know, this game kinda sucks lol
+But it was fun for me to make, and I hope it at least gave you something to do.
+I&#39;m not sure if I will release it or not, but whatever
+
+<a href="https://drive.google.com/file/d/1hWg8bJWs4hGL_u74jJAYj3w3QhwcLBf3/view?usp=sharing">https://drive.google.com/file/d/1hWg8bJWs4hGL_u74jJAYj3w3QhwcLBf3/view?usp=sharing</a></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://drive.google.com/file/d/1hWg8bJWs4hGL_u74jJAYj3w3QhwcLBf3/view?usp=sharing">
+                                                    <div class="markdown preserve-whitespace">ejow.exe</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="https://cdn.discordapp.com/avatars/663886835289948171/703b671b69ef8af2a7b67502ce42c75b.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Wainggan#2275" data-user-id="663886835289948171" style="color: rgb(233,30,99)">Wainggan</span>
+
+
+        <span class="chatlog__timestamp">15-Apr-21 11:42 AM</span>
+
+            <div class="chatlog__message " data-message-id="832325114649510009" id="message-832325114649510009">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><a href="https://wainggan.itch.io/ejow">https://wainggan.itch.io/ejow</a>
+Let&#39;s gooo</span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="chatlog__embed">
+                            <div class="chatlog__embed-color-pill" style="background-color: rgba(159,195,229,255)"></div>
+
+                        <div class="chatlog__embed-content-container">
+                            <div class="chatlog__embed-content">
+                                <div class="chatlog__embed-text">
+
+                                        <div class="chatlog__embed-title">
+                                                <a class="chatlog__embed-title-link" href="https://wainggan.itch.io/ejow">
+                                                    <div class="markdown preserve-whitespace">EJOW by Wainggan</div>
+                                                </a>
+                                        </div>
+
+
+                                </div>
+
+                                    <div class="chatlog__embed-thumbnail-container">
+                                        <a class="chatlog__embed-thumbnail-link" href="https://img.itch.zone/aW1nLzU2ODI2MzgucG5n/original/UP4Djv.png">
+                                            <img class="chatlog__embed-thumbnail" src="https://img.itch.zone/aW1nLzU2ODI2MzgucG5n/original/UP4Djv.png" alt="Thumbnail">
+                                        </a>
+                                    </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+</div>
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">Exported 104 message(s)</div>
+</div>
+
+</body>
+
+</html>
